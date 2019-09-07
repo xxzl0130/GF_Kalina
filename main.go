@@ -78,6 +78,7 @@ func (gf *GF) build(body response) {
 	if body.Body[0] == byte(35){
 		if strings.HasSuffix(body.Path,"/Index/getDigitalSkyNbUid") || strings.HasSuffix(body.Path, "/Index/getUidTianxiaQueue"){
 			data, err := cipher.AuthCodeDecodeB64Default(string(body.Body)[1:])
+			_ = ioutil.WriteFile("uid.txt", []byte(data), 0)
 			if err != nil {
 				fmt.Printf("解析Uid数据失败 -> %+v\n", err)
 				return
@@ -91,6 +92,7 @@ func (gf *GF) build(body response) {
 			return
 		} else if strings.HasSuffix(body.Path,"/Index/index"){
 			data, err := cipher.AuthCodeDecodeB64(string(body.Body)[1:], gf.key, true)
+			_ = ioutil.WriteFile("index.txt", []byte(data), 0)
 			if err != nil {
 				fmt.Printf("解析用户数据失败 -> %+v\n", err)
 				return
