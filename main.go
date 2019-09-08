@@ -11,7 +11,7 @@ import (
 
 	"github.com/elazarl/goproxy"
 	"github.com/pkg/errors"
-	cipher "github.com/xxzl0130/GF_cipher"
+	cipher "github.com/xxzl0130/GF_Kalina/GF_cipher"
 	"github.com/xxzl0130/GF_Kalina/pkg/util"
 )
 
@@ -21,7 +21,7 @@ func main() {
 		key : "",
 	}
 	if err := gf.Run(); err != nil {
-		fmt.Println("程序启动失败 -> %+v", err)
+		fmt.Printf("程序启动失败 -> %+v\n", err)
 	}
 }
 
@@ -42,6 +42,7 @@ func (gf *GF) Run() error {
 	localhost, err := gf.getLocalhost()
 	if err != nil {
 		fmt.Printf("获取代理地址失败 -> %+v\n", err)
+		return err
 	}
 
 	fmt.Printf("代理地址 -> %v:%v\n", localhost, 8888)
@@ -53,6 +54,7 @@ func (gf *GF) Run() error {
 
 	if err := http.ListenAndServe(":8888", srv); err != nil {
 		fmt.Printf("启动代理服务器失败 -> %+v\n", err)
+		return err
 	}
 
 	return nil
@@ -78,7 +80,6 @@ func (gf *GF) build(body response) {
 	if body.Body[0] == byte(35){
 		if strings.HasSuffix(body.Path,"/Index/getDigitalSkyNbUid") || strings.HasSuffix(body.Path, "/Index/getUidTianxiaQueue"){
 			data, err := cipher.AuthCodeDecodeB64Default(string(body.Body)[1:])
-			_ = ioutil.WriteFile("uid.txt", []byte(data), 0)
 			if err != nil {
 				fmt.Printf("解析Uid数据失败 -> %+v\n", err)
 				return
@@ -92,7 +93,6 @@ func (gf *GF) build(body response) {
 			return
 		} else if strings.HasSuffix(body.Path,"/Index/index"){
 			data, err := cipher.AuthCodeDecodeB64(string(body.Body)[1:], gf.key, true)
-			_ = ioutil.WriteFile("index.txt", []byte(data), 0)
 			if err != nil {
 				fmt.Printf("解析用户数据失败 -> %+v\n", err)
 				return
@@ -105,10 +105,8 @@ func (gf *GF) build(body response) {
 			fmt.Println("==================================")
 			fmt.Printf("你一共给格林娜花了：%v 元\n", gf_json.User.Spend_point)
 			fmt.Printf("格林娜对你的好感为：%v  Lv.%v/30\n", gf_json.Kalina.Favor, gf_json.Kalina.Level)
-			
 		}
 	}
-
 }
 
 func (gf *GF) loop() {
