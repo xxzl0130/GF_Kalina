@@ -64,15 +64,12 @@ func (gf *GF) build(body response) {
 	type Uid struct {
 		Sign string `json:"sign"`
 	}
-	type UserRecord struct {
-		Spend_point string `json:"spend_point"`
-	}
 	type KalinaData struct {
 		Level string `json:"level"`
 		Favor string `json:"favor"`
 	}
 	type GF_Json struct {
-		User UserRecord `json:"user_record"`
+		User map[string]interface{} `json:"user_record"`
 		Kalina KalinaData `json:"kalina_with_user_info"`
 	}
 	
@@ -103,7 +100,7 @@ func (gf *GF) build(body response) {
 				return
 			}
 			fmt.Println("==================================")
-			fmt.Printf("你一共给格林娜花了：%v 元\n", gf_json.User.Spend_point)
+			fmt.Printf("你一共给格林娜花了：%v 元\n", gf_json.User["spend_point"])
 			fmt.Printf("格林娜对你的好感为：%v  Lv.%v/30\n", gf_json.Kalina.Favor, gf_json.Kalina.Level)
 		}
 	}
