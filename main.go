@@ -75,7 +75,7 @@ func (gf *GF) build(body response) {
 	
 	// starts with "#"
 	if body.Body[0] == byte(35){
-		if strings.HasSuffix(body.Path,"/Index/getDigitalSkyNbUid") || strings.HasSuffix(body.Path, "/Index/getUidTianxiaQueue"){
+		if strings.HasSuffix(body.Path,"/Index/getDigitalSkyNbUid") || strings.HasSuffix(body.Path, "/Index/getUidTianxiaQueue") || strings.HasSuffix(body.Path,"/Index/getUidEnMicaQueue"){
 			data, err := cipher.AuthCodeDecodeB64Default(string(body.Body)[1:])
 			if err != nil {
 				fmt.Printf("解析Uid数据失败 -> %+v\n", err)
@@ -133,8 +133,8 @@ func (gf *GF) onResponse(resp *http.Response, ctx *goproxy.ProxyCtx) *http.Respo
 
 func (gf *GF) condition() goproxy.ReqConditionFunc {
 	return func(req *http.Request, ctx *goproxy.ProxyCtx) bool {
-		if strings.HasSuffix(req.Host, "ppgame.com") || strings.HasSuffix(req.Host, "sn-game.txwy.tw") {
-			if strings.HasSuffix(req.URL.Path, "/Index/index") || strings.HasSuffix(req.URL.Path, "/Index/getDigitalSkyNbUid") || strings.HasSuffix(req.URL.Path, "/Index/getUidTianxiaQueue"){
+		if strings.HasSuffix(req.Host, "ppgame.com") || strings.HasSuffix(req.Host, "sn-game.txwy.tw")  || strings.HasSuffix(req.Host, "girlfrontline.co.kr") || strings.HasSuffix(req.Host, "sunborngame.com") || strings.HasSuffix(req.Host, "sn-game.txwy.tw") {
+			if strings.HasSuffix(req.URL.Path, "/Index/index") || strings.HasSuffix(req.URL.Path, "/Index/getDigitalSkyNbUid") || strings.HasSuffix(req.URL.Path, "/Index/getUidTianxiaQueue") || strings.HasSuffix(req.URL.Path,"/Index/getUidEnMicaQueue"){
 				return true
 			}
 		}
